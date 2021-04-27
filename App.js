@@ -33,13 +33,13 @@ export default function App() {
             inactiveTintColor: 'white', inactiveBackgroundColor: colors.pink,
             tabStyle: { borderRadius: 20, alignItems: 'center', justifyContent: 'center', borderColor: "white", width: 10, height: 40, margin: 5, borderWidth: 3 },
             labelStyle: { fontSize: 15 },
-            activeTintColor: colors.dark,
+            activeTintColor: colors.white,
             inactiveTintColor: 'white',
             style: { backgroundColor: colors.secondary, borderWidth: 0 }
           }}
         >
-          <Tab.Screen name="List" component={List} />
-          <Tab.Screen name="AddItem" component={AddItem} />
+          <Tab.Screen name="Les cas" component={List} />
+          <Tab.Screen name="Ajouter cas" component={AddItem} />
         </Tab.Navigator>
       </NavigationContainer>
     </ItemContext.Provider>

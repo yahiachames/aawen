@@ -14,10 +14,11 @@ export const setItems = async (data) => {
     try {
 
 
+
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
         const result = await axios.post(baseUrl + 'apis/setitems', data, config)
-        console.log(result, 'from set items')
 
+        return result
 
 
 

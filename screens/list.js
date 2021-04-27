@@ -8,40 +8,60 @@ import * as Location from 'expo-location';
 import ListItem from './../components/ListtItem';
 import { data } from '../data'
 import colors from '../config/colors';
-import ItemContext from './../reactContext/itemContext';
+
 import { getItems } from './../controllers/itemsapis';
-
-const renderMenuItem = ({ item, index }) => {
-    return (
-
-        <ListItem
-            index={index}
-            item={item}
-
-        />
-
-    );
-};
+import { DetailScreen } from './detail';
+import NewAddItem from './NewAddItem';
 
 
 
-export function ListScreen() {
+
+
+
+export function ListScreen(props) {
+    const [cases, setCases] = useState(null)
+
+
+    const getCases = async () => {
+
+        getItems().then((res) => {
+            setCases(res)
+        }).catch(e => console.log(e))
+
+    }
+
+    useEffect(() => {
+        getCases()
+    }, [JSON.stringify(cases)])
+
+    const renderMenuItem = ({ item, index }) => {
+        return (
+
+            <ListItem
+                index={index}
+                item={item}
+                onPress={() => props.navigation.navigate("Details", { details: item })}
+
+            />
+
+        );
+    };
     const [refreshing, setRefreshing] = useState(false)
 
-    const itemContext = useContext(ItemContext)
+
 
 
     const onRefresh = useCallback(() => {
 
         setRefreshing(true)
         getItems().then((res) => {
-            itemContext.setItem(res)
+            setCases(res)
             setRefreshing(false)
         })
     })
 
 
-    if (itemContext.item !== null) {
+    if (cases !== null) {
         return (
 
             <View style={styles.container}>
@@ -51,7 +71,7 @@ export function ListScreen() {
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
 
-                    data={itemContext.item}
+                    data={cases}
                     renderItem={renderMenuItem}
                     keyExtractor={(item, index) => index + ""}
                 />
@@ -73,7 +93,8 @@ const Stack = createStackNavigator();
 export default function List() {
     return (
         <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: "white" }}>
-            <Stack.Screen name="List" component={ListScreen} />
+            <Stack.Screen name="Les cas" component={ListScreen} />
+            <Stack.Screen name="Details" component={DetailScreen} />
         </Stack.Navigator>
     );
 }
@@ -83,7 +104,7 @@ const styles = StyleSheet.create({
     container: {
 
         flex: 1,
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.white,
         justifyContent: "center",
         alignItems: "center",
 

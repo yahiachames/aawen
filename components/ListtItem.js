@@ -1,62 +1,95 @@
-import React from 'react'
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Image } from 'react-native'
-import { Overlay } from 'react-native-maps';
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, Image, TouchableHighlight } from 'react-native'
+import * as Location from 'expo-location';
 
 
 
 import colors from '../config/colors';
 import { adaptToheight, adaptToWidth, height } from '../config/dimensions';
-import MapView from 'react-native-maps';
+
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { baseUrl } from '../baseUrl';
 
 
 
 export default function ListItem({ item, index, onPress }) {
+    const [loading, setLoading] = useState(true)
+    const [geocode, setGeocode] = useState(null)
 
-    return (
+    const convertLocationToTitle = async () => {
 
-        <View style={styles.container}  >
-            <Text style={styles.title} >{item.title}</Text>
+        try {
+            Location.enableNetworkProviderAsync()
+            let { status } = await Location.requestForegroundPermissionsAsync();
 
-            <MapView
-                style={styles.map}
-                region={{ latitude: item.latitude, longitude: item.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+            if (status !== 'granted') {
+                alert('Sorry, we need Location permissions to make this work!');
+                setLoading(true)
+            } else {
+                let state = await Location.reverseGeocodeAsync({ latitude: item.latitude, longitude: item.longitude })
+                setGeocode({ city: state[0].city, street: state[0].street })
+
+                setLoading(false)
+
+            }
+        } catch (e) {
+            console.log(e)
+        }
+
+    }
+
+    useEffect(() => {
+
+        convertLocationToTitle()
+    }, [JSON.stringify(geocode), loading])
+
+    if (!loading) {
+        return (
+
+            <TouchableHighlight onPress={onPress} activeOpacity={0.6}
+                underlayColor="#DDDDDD"  >
+
+                <View style={styles.container}  >
+
+
+                    <Image source={{ uri: baseUrl + item.image.split('\\').join('/') }} style={{ width: "100%", height: "60%" }} />
+                    <View style={styles.textTitle} >
+                        <Text style={styles.title} >{item.title}</Text>
+                        <View style={styles.textBox} >
+                            <MaterialCommunityIcons name="google-maps" size={20} color='red' style={styles.icon} />
+                            <Text style={styles.text} >{geocode.city}, </Text>
+                            <Text style={styles.text} >{geocode.street}</Text>
+                        </View>
+
+                    </View>
+
+
+                </View>
+            </TouchableHighlight>
 
 
 
-
-            >
-
-
-                <MapView.Marker
-                    title="YIKES, Inc."
-                    description="Web Design and Development"
-                    coordinate={{ "latitude": item.latitude, "longitude": item.longitude }}
-                />
-            </MapView>
-
-
-
-
-
-
-        </View>
-
-
-
-    )
+        )
+    } else {
+        return (
+            <View>
+                <Text>Loading ...</Text>
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        height: 300,
-        width: 400,
+        height: Dimensions.get('window').height / 2,
+        width: Dimensions.get('window').width / 1.05,
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
 
         justifyContent: 'space-evenly',
-        backgroundColor: "rgba(0, 0, 0,0.4)",
-        borderBottomColor: colors.light,
+        backgroundColor: colors.white,
+
 
 
         margin: 5,
@@ -72,12 +105,13 @@ const styles = StyleSheet.create({
 
     },
     title: {
-        color: colors.white,
+        color: colors.grey,
 
         width: "100%",
-        fontSize: 18,
-        height: "10%",
+        fontSize: Dimensions.get('window').width / 25,
+        fontWeight: 'bold',
         textAlign: "center",
+        padding: 5
 
 
     },
@@ -92,6 +126,25 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "60%",
         alignSelf: "flex-end"
+
+    },
+    textBox: {
+        marginTop: Dimensions.get('window').height / 115,
+        justifyContent: 'center',
+        alignItems: "center",
+        flexDirection: 'row'
+    },
+    textTitle: {
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        marginLeft: Dimensions.get('window').width / 30,
+
+
+
+    },
+    text: {
+        color: 'red',
+        fontSize: Dimensions.get('window').width / 20,
 
     }
 

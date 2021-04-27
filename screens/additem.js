@@ -10,6 +10,8 @@ import AppTextInput from './../components/AppTextInput';
 import colors from '../config/colors';
 import ItemContext from '../reactContext/itemContext';
 import { setItems } from '../controllers/itemsapis';
+import NewAddItem from './NewAddItem';
+
 
 
 export function AddItemScreen() {
@@ -60,8 +62,12 @@ export function AddItemScreen() {
 
     const getlocation = async () => {
         try {
-            let location = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-            setLocation(location)
+            let { coords: { latitude, longitude } } = await Location.getCurrentPositionAsync({})
+            setLocation({ latitude, longitude })
+
+            setRegion({ latitude, longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 });
+            setLoading(false)
+
         } catch (e) {
             console.log(e)
         }
@@ -94,7 +100,7 @@ export function AddItemScreen() {
     if (errorMsg) {
         text = errorMsg;
     }
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
 
 
 
@@ -104,7 +110,8 @@ export function AddItemScreen() {
         formData.append('description', description);
         formData.append('altitude', location.latitude);
         formData.append('longitude', location.longitude);
-        setItems(formData)
+        const result = await setItems(formData)
+        console.log(result)
 
 
     }
@@ -151,7 +158,7 @@ const Stack = createStackNavigator();
 export default function AddItem() {
     return (
         <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: "white" }} >
-            <Stack.Screen name="AddItem" component={AddItemScreen} />
+            <Stack.Screen name="Ajouter cas" component={NewAddItem} />
         </Stack.Navigator>
     );
 }

@@ -1,1 +1,1 @@
-export const baseUrl = "http://192.168.1.103:3333/"
+export const baseUrl = "http://aawen-app.azurewebsites.net/"
