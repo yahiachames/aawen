@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -13,36 +14,28 @@ import ItemContext from './reactContext/itemContext';
 import { getItems } from './controllers/itemsapis';
 const Tab = createBottomTabNavigator();
 export default function App() {
-  const [item, setItem] = useState(null)
-  useEffect(() => {
-    const asyncGetItems = async () => {
-      const result = await getItems()
-      setItem(result)
 
-    }
-    asyncGetItems()
-  }, [])
 
   return (
-    <ItemContext.Provider value={{ item, setItem }}>
-      <NavigationContainer>
-        <Tab.Navigator
 
-          tabBarOptions={{
-            activeBackgroundColor: colors.yellowFlash, activeTintColor: colors.dark,
-            inactiveTintColor: 'white', inactiveBackgroundColor: colors.pink,
-            tabStyle: { borderRadius: 20, alignItems: 'center', justifyContent: 'center', borderColor: "white", width: 10, height: 40, margin: 5, borderWidth: 3 },
-            labelStyle: { fontSize: 15 },
-            activeTintColor: colors.white,
-            inactiveTintColor: 'white',
-            style: { backgroundColor: colors.secondary, borderWidth: 0 }
-          }}
-        >
-          <Tab.Screen name="Les cas" component={List} />
-          <Tab.Screen name="Ajouter cas" component={AddItem} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </ItemContext.Provider>
+    <NavigationContainer>
+      <Tab.Navigator
+
+        tabBarOptions={{
+          activeBackgroundColor: colors.yellowFlash, activeTintColor: colors.dark,
+          inactiveTintColor: 'white', inactiveBackgroundColor: colors.pink,
+          tabStyle: { borderRadius: 20, alignItems: 'center', justifyContent: 'center', borderColor: "white", width: 10, height: 40, margin: 5, borderWidth: 3 },
+          labelStyle: { fontSize: 15 },
+          activeTintColor: colors.white,
+          inactiveTintColor: 'white',
+          style: { backgroundColor: colors.secondary, borderWidth: 0 }
+        }}
+      >
+        <Tab.Screen name="Les cas" component={List} />
+        <Tab.Screen name="Ajouter cas" component={AddItem} />
+      </Tab.Navigator>
+    </NavigationContainer>
+
 
   );
 }

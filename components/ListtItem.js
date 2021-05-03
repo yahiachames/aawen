@@ -1,82 +1,52 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, Image, TouchableHighlight } from 'react-native'
-import * as Location from 'expo-location';
+import React from 'react'
+import { StyleSheet, Text, View, Dimensions, Image, TouchableHighlight } from 'react-native'
+
 
 
 
 import colors from '../config/colors';
-import { adaptToheight, adaptToWidth, height } from '../config/dimensions';
 
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+
+import { MaterialCommunityIcons, } from '@expo/vector-icons'
 import { baseUrl } from '../baseUrl';
 
 
 
 export default function ListItem({ item, index, onPress }) {
-    const [loading, setLoading] = useState(true)
-    const [geocode, setGeocode] = useState(null)
-
-    const convertLocationToTitle = async () => {
-
-        try {
-            Location.enableNetworkProviderAsync()
-            let { status } = await Location.requestForegroundPermissionsAsync();
-
-            if (status !== 'granted') {
-                alert('Sorry, we need Location permissions to make this work!');
-                setLoading(true)
-            } else {
-                let state = await Location.reverseGeocodeAsync({ latitude: item.latitude, longitude: item.longitude })
-                setGeocode({ city: state[0].city, street: state[0].street })
-
-                setLoading(false)
-
-            }
-        } catch (e) {
-            console.log(e)
-        }
-
-    }
-
-    useEffect(() => {
-
-        convertLocationToTitle()
-    }, [JSON.stringify(geocode), loading])
-
-    if (!loading) {
-        return (
-
-            <TouchableHighlight onPress={onPress} activeOpacity={0.6}
-                underlayColor="#DDDDDD"  >
-
-                <View style={styles.container}  >
 
 
-                    <Image source={{ uri: baseUrl + item.image.split('\\').join('/') }} style={{ width: "100%", height: "60%" }} />
-                    <View style={styles.textTitle} >
-                        <Text style={styles.title} >{item.title}</Text>
-                        <View style={styles.textBox} >
-                            <MaterialCommunityIcons name="google-maps" size={20} color='red' style={styles.icon} />
-                            <Text style={styles.text} >{geocode.city}, </Text>
-                            <Text style={styles.text} >{geocode.street}</Text>
-                        </View>
 
+    console.log(item)
+
+
+
+    return (
+
+        <TouchableHighlight onPress={onPress} activeOpacity={0.6}
+            underlayColor="#DDDDDD"  >
+
+            <View style={styles.container}  >
+
+
+                <Image source={{ uri: baseUrl + item.image.split('\\').join('/') }} style={{ width: "100%", height: "60%" }} />
+                <View style={styles.textTitle} >
+                    <Text style={styles.title} >{item.title}</Text>
+                    <View style={styles.textBox} >
+                        <MaterialCommunityIcons name="google-maps" size={20} color='red' style={styles.icon} />
+                        <Text style={styles.text} >{item.city}, </Text>
+                        <Text style={styles.text} >{item.street}</Text>
                     </View>
 
-
                 </View>
-            </TouchableHighlight>
 
 
 
-        )
-    } else {
-        return (
-            <View>
-                <Text>Loading ...</Text>
             </View>
-        )
-    }
+        </TouchableHighlight>
+
+
+
+    )
 }
 
 const styles = StyleSheet.create({

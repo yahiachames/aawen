@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "SOS",
-    "slug": "SOS",
+    "name": "Karma",
+    "slug": "Karma",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/sos.png",
+    "icon": "./assets/karma.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,7 +19,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sos.sos",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCvof7_Rfgbwt1lK-2Xja6PRxNkS2d3ohA"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +30,12 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.sos.sos",
-      "versionCode": 1
+      "versionCode": 1,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDHKYX4D0RijmTdHOFwaPq5mem58lVz7GQ"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

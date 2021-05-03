@@ -3,14 +3,13 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { StyleSheet, Text, View, Image, Platform, FlatList, RefreshControl } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import * as ImagePicker from 'expo-image-picker';
-import * as Location from 'expo-location';
+
 import ListItem from './../components/ListtItem';
-import { data } from '../data'
+
 import colors from '../config/colors';
 
 import { getItems } from './../controllers/itemsapis';
-import { DetailScreen } from './detail';
+import DetailScreen from './detail';
 import NewAddItem from './NewAddItem';
 
 
@@ -24,9 +23,12 @@ export function ListScreen(props) {
 
     const getCases = async () => {
 
-        getItems().then((res) => {
+        try {
+            const res = await getItems()
             setCases(res)
-        }).catch(e => console.log(e))
+        } catch (e) {
+            console.log(e)
+        }
 
     }
 
@@ -35,6 +37,7 @@ export function ListScreen(props) {
     }, [JSON.stringify(cases)])
 
     const renderMenuItem = ({ item, index }) => {
+        console.log(props)
         return (
 
             <ListItem
@@ -54,10 +57,7 @@ export function ListScreen(props) {
     const onRefresh = useCallback(() => {
 
         setRefreshing(true)
-        getItems().then((res) => {
-            setCases(res)
-            setRefreshing(false)
-        })
+        getCases().then((res) => setRefreshing(false))
     })
 
 
@@ -73,7 +73,7 @@ export function ListScreen(props) {
 
                     data={cases}
                     renderItem={renderMenuItem}
-                    keyExtractor={(item, index) => index + ""}
+                    keyExtractor={(item, index) => index + 1 + ""}
                 />
             </View>
 
@@ -89,12 +89,24 @@ export function ListScreen(props) {
     }
 }
 
-const Stack = createStackNavigator();
+
 export default function List() {
+    const Stack = createStackNavigator();
     return (
-        <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: "white" }}>
-            <Stack.Screen name="Les cas" component={ListScreen} />
-            <Stack.Screen name="Details" component={DetailScreen} />
+        <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: colors.secondary }, headerTintColor: "white" }} initialRouteName="Les cas" >
+            <Stack.Screen
+                name="Les cas"
+
+            >
+                {(props) => <ListScreen {...props} />}
+            </Stack.Screen>
+            <Stack.Screen
+                name="Details"
+
+            >
+                {(props) => <DetailScreen {...props} />}
+            </Stack.Screen>
+
         </Stack.Navigator>
     );
 }

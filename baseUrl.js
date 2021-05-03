@@ -1,1 +1,1 @@
-export const baseUrl = "http://aawen-app.azurewebsites.net/"
+export const baseUrl = "https://aawen-grp.azurewebsites.net/"

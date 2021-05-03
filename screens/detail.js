@@ -1,18 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Platform, Dimensions } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import AppButton from './../components/Button';
-import * as ImagePicker from 'expo-image-picker';
-import * as Location from 'expo-location';
+import React from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+
 import MapView from 'react-native-maps';
 
 import { baseUrl } from './../baseUrl';
-import Screen from './../components/screen';
+
 import colors from '../config/colors';
 
 
-export function DetailScreen(props) {
+export default function DetailScreen(props) {
     const { details } = props.route.params
     console.log(baseUrl + details.image.split('\\').join('/'))
     console.log(details)
@@ -32,29 +28,23 @@ export function DetailScreen(props) {
                     <MapView.Marker
                         title="YIKES, Inc."
                         description="Web Design and Development"
-                        coordinate={{ "latitude": details.latitude, "longitude": details.longitude }}
+                        coordinate={{ latitude: details.latitude, longitude: details.longitude }}
                     />
                 </MapView>
                 <View style={styles.textBox} >
                     <Text style={styles.textTitle} numberOfLines={1} ellipsizeMode="tail" > {details.title}</Text>
-                    <Text style={styles.textDescription} numberOfLines={6} ellipsizeMode="tail"  >  {details.description}</Text>
+                    <Text style={styles.textDescription} numberOfLines={7} ellipsizeMode="tail"  >  {details.description}</Text>
                 </View>
             </View>
-        </View>
+
+        </View >
 
 
 
     );
 }
 
-const Stack = createStackNavigator();
-export default function Detail() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Detail" component={DetailScreen} />
-        </Stack.Navigator>
-    );
-}
+
 
 
 const styles = StyleSheet.create({
@@ -98,7 +88,7 @@ const styles = StyleSheet.create({
     componentDetail: {
         marginTop: Dimensions.get('window').height / 45,
         width: '90%',
-        height: '80%',
+        height: '90%',
         justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: colors.white,
